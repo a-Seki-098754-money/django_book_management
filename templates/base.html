@@ -6,28 +6,36 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}図書管理システム{% endblock %}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        span {
+            color: white;
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
         <div class="container">
-            <!-- URLタグを修正 -->
             <a class="navbar-brand" href="{% url 'book_management:index' %}">図書管理システム</a>
-            <div class="navbar-nav">
+            
+            <!-- 検索フォームをここに追加 -->
+            <form class="d-flex" action="{% url 'book_management:search_books' %}" method="get">
+                <input class="form-control me-2" type="search" placeholder="タイトル、著者、出版社" aria-label="Search" name="q" value="{{ request.GET.q|default:'' }}">
+                <button class="btn btn-outline-light" type="submit">検索</button>
+            </form>
+
+            <div class="navbar-nav ms-auto"> <!-- ms-auto で右寄せ -->
                 <a class="nav-link" href="{% url 'book_management:book_list' %}">図書一覧</a>
                 {% if user.is_authenticated %}
-                    {% comment %} <a class="nav-link" href="{% url 'admin:logout' %}">ログアウト</a> {% endcomment %}
-                    <span class="nav-link active" {{user}}でログインしています></span>
-                {% endif %}
-                {% if user.is_authenticated %}
+                    <a class="nav-link" href="{% url 'book_management:my_rentals' %}">マイ貸出</a> <!-- マイ貸出へのリンクを追加 -->
+                    <span class="nav-link active">{{ user.username }}でログインしています</span> <!-- userをusernameに修正 -->
                     <a href="{% url 'logout' %}" class="nav-link active">ログアウト</a>
                 {% else %}
                     <a href="{% url 'login' %}" class="nav-link active">ログイン</a>
+                    <a href="{% url 'accounts:signup' %}" class="nav-link active">新規登録</a> <!-- 新規登録へのリンクを追加 -->
                 {% endif %}
-               
             </div>
         </div>
     </nav>
-
     <div class="container mt-4">
         {% if messages %}
             {% for message in messages %}
@@ -37,11 +45,9 @@
                 </div>
             {% endfor %}
         {% endif %}
-
         {% block content %}
         {% endblock %}
     </div>
-
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

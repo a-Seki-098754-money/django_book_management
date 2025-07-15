@@ -14,6 +14,4 @@ class SignUpView(CreateView):
         response = super().form_valid(form)
         return response
     
-    
 
-# Create your views here.
