@@ -1,0 +1,118 @@
+<!-- templates/registration/signup.html -->
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block title %}新規登録{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">新規会員登録</h3>
+                </div>
+                <div class="card-body">
+                    <form method="post" enctype="multipart/form-data">
+                        {% csrf_token %}
+                        
+                        <!-- 基本情報 -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {% bootstrap_field form.username %}
+                            </div>
+                            <div class="col-md-6">
+                                {% bootstrap_field form.email %}
+                            </div>
+                        </div>
+                        
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {% bootstrap_field form.first_name %}
+                            </div>
+                            <div class="col-md-6">
+                                {% bootstrap_field form.last_name %}
+                            </div>
+                        </div>
+                        
+                        <!-- パスワード -->
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {% bootstrap_field form.password1 %}
+                            </div>
+                            <div class="col-md-6">
+                                {% bootstrap_field form.password2 %}
+                            </div>
+                        </div>
+                        
+                        <!-- 連絡先情報 -->
+                        <h5 class="mt-4 mb-3">連絡先情報</h5>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {% bootstrap_field form.phone_number %}
+                            </div>
+                            <div class="col-md-6">
+                                {% bootstrap_field form.postal_code %}
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            {% bootstrap_field form.address %}
+                        </div>
+                        
+                        <!-- 会員情報 -->
+                        <h5 class="mt-4 mb-3">会員情報</h5>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                {% bootstrap_field form.membership_type %}
+                            </div>
+                        </div>
+                        
+                        <!-- プロフィール画像 -->
+                        <div class="mb-3">
+                            {% bootstrap_field form.profile_image %}
+                            <small class="form-text text-muted">
+                                対応形式: JPG, PNG, GIF（最大5MB）
+                            </small>
+                        </div>
+                        
+                        <!-- プレビュー用のJavaScript -->
+                        <div class="mb-3" id="image-preview" style="display: none;">
+                            <label class="form-label">プレビュー:</label><br>
+                            <img id="preview-img" src="/placeholder.svg" alt="プレビュー" style="max-width: 200px; max-height: 200px;" class="img-thumbnail">
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">登録</button>
+                        </div>
+                    </form>
+                    
+                    <div class="text-center mt-3">
+                        <p>既にアカウントをお持ちですか？ <a href="{% url 'login' %}">ログイン</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 画像プレビュー用JavaScript -->
+<script>
+document.getElementById('id_profile_image').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    const preview = document.getElementById('image-preview');
+    const previewImg = document.getElementById('preview-img');
+    
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            previewImg.src = e.target.result;
+            preview.style.display = 'block';
+        };
+        reader.readAsDataURL(file);
+    } else {
+        preview.style.display = 'none';
+    }
+});
+</script>
+{% endblock %}

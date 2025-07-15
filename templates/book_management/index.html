@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block title %}図書管理システム - ホーム{% endblock %}
+
+{% block content %}
+<div class="jumbotron bg-light p-5 rounded-lg mb-4">
+    <h1 class="display-4">図書管理システムへようこそ</h1>
+    <p class="lead">図書の検索、貸出、返却を管理できます。</p>
+    <hr class="my-4">
+    <a class="btn btn-primary btn-lg" href="/books/" role="button">図書一覧を見る</a>
+</div>
+
+{% if books %}
+<h3>新着図書</h3>
+<div class="row">
+    {% for book in books %}
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            {% if book.cover_image %}
+                <img src="{{ book.cover_image.url }}" class="card-img-top" alt="{{ book.title }}" style="height: 250px; object-fit: cover;">
+            {% else %}
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
+                    <span class="text-muted">画像なし</span>
+                </div>
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ book.title }}</h5>
+                <p class="card-text">著者: {{ book.author }}</p>
+                <p class="card-text">出版社: {{ book.publisher }}</p>
+                <a href="/books/{{ book.book_id }}/" class="btn btn-primary">詳細を見る</a>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">
+    <p>図書が登録されていません。管理画面から図書を追加してください。</p>
+    <a href="/admin/" class="btn btn-secondary">管理画面へ</a>
+</div>
+{% endif %}
+{% endblock %}

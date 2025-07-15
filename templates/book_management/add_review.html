@@ -1,0 +1,37 @@
+<!-- templates/book_management/add_review.html -->
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block title %}レビューを追加{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center">「{{ book.title }}」のレビューを追加</h3>
+                </div>
+                <div class="card-body">
+                    {% if message %}
+                        <div class="alert alert-info" role="alert">
+                            {{ message }}
+                        </div>
+                    {% endif %}
+                    <form method="post">
+                        {% csrf_token %}
+                        
+                        {% bootstrap_form form %}
+                        
+                        <div class="d-grid gap-2 mt-4">
+                            <button type="submit" class="btn btn-primary btn-lg">レビューを投稿</button>
+                            <!-- ここを修正: 'book_detail' を 'book_management:book_detail' に変更 -->
+                            <a href="{% url 'book_management:book_detail' book.pk %}" class="btn btn-secondary btn-lg">キャンセル</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

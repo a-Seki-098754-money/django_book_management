@@ -1,0 +1,50 @@
+<!-- book_management/templates/book_management/book_list.html -->
+{% extends 'base.html' %}
+
+{% block title %}図書一覧 - 図書管理システム{% endblock %}
+
+{% block content %}
+<h2>図書一覧</h2>
+
+<div class="row">
+    {% for book in books %}
+    <div class="col-md-4 mb-4">
+        <div class="card">
+            {% if book.cover_image %}
+                <img src="{{ book.cover_image.url }}" class="card-img-top" alt="{{ book.title }}" style="height: 200px; object-fit: cover;">
+            {% else %}
+                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                    <span class="text-muted">画像なし</span>
+                </div>
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ book.title }}</h5>
+                <p class="card-text">著者: {{ book.author }}</p>
+                <p class="card-text">出版社: {{ book.publisher }}</p>
+                <p class="card-text">
+                    <small class="text-muted">
+                        評価: {{ book.average_rating }}★ ({{ book.review_count }}件)
+                    </small>
+                </p>
+                <p class="card-text">
+                    <span class="badge {% if book.available_copies > 0 %}bg-success{% else %}bg-danger{% endif %}">
+                        {% if book.available_copies > 0 %}
+                            貸出可能 ({{ book.available_copies }}/{{ book.total_copies }})
+                        {% else %}
+                            貸出中
+                        {% endif %}
+                    </span>
+                </p>
+                <a href="{% url 'book_management:book_detail' book.book_id %}" class="btn btn-primary">詳細を見る</a>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+        <div class="alert alert-info">
+            <p>図書が登録されていません。</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
