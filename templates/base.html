@@ -10,6 +10,15 @@
         span {
             color: white;
         }
+        /* プロフィール画像のスタイル */
+        .profile-icon {
+            width: 32px; /* アイコンの幅 */
+            height: 32px; /* アイコンの高さ */
+            border-radius: 50%; /* 丸くする */
+            object-fit: cover; /* 画像がはみ出さないように調整 */
+            margin-right: 8px; /* テキストとの間隔 */
+            border: 1px solid #ddd; /* 軽い枠線 */
+        }
     </style>
 </head>
 <body>
@@ -17,21 +26,31 @@
         <div class="container">
             <a class="navbar-brand" href="{% url 'book_management:index' %}">図書管理システム</a>
             
-            <!-- 検索フォームをここに追加 -->
             <form class="d-flex" action="{% url 'book_management:search_books' %}" method="get">
                 <input class="form-control me-2" type="search" placeholder="タイトル、著者、出版社" aria-label="Search" name="q" value="{{ request.GET.q|default:'' }}">
                 <button class="btn btn-outline-light" type="submit">検索</button>
             </form>
 
-            <div class="navbar-nav ms-auto"> <!-- ms-auto で右寄せ -->
+            <div class="navbar-nav ms-auto">
                 <a class="nav-link" href="{% url 'book_management:book_list' %}">図書一覧</a>
                 {% if user.is_authenticated %}
-                    <a class="nav-link" href="{% url 'book_management:my_rentals' %}">マイ貸出</a> <!-- マイ貸出へのリンクを追加 -->
-                    <span class="nav-link active">{{ user.username }}でログインしています</span> <!-- userをusernameに修正 -->
+                    <a class="nav-link" href="{% url 'book_management:my_rentals' %}">マイ貸出</a>
+                    
+                    <!-- ここにアイコン表示ロジックを追加 -->
+                    <span class="nav-link active d-flex align-items-center">
+                        {% if user.member and user.member.profile_image %}
+                            <img src="{{ user.member.profile_image.url }}" alt="{{ user.username }}のプロフィール画像" class="profile-icon">
+                        {% else %}
+                            <!-- デフォルトのアイコン（例: /placeholder.svg または Font Awesomeなど） -->
+                            <img src="/placeholder.svg?height=32&width=32&text=👤" alt="デフォルトアイコン" class="profile-icon">
+                        {% endif %}
+                        {{ user.username }}でログインしています
+                    </span>
+                    
                     <a href="{% url 'logout' %}" class="nav-link active">ログアウト</a>
                 {% else %}
                     <a href="{% url 'login' %}" class="nav-link active">ログイン</a>
-                    <a href="{% url 'accounts:signup' %}" class="nav-link active">新規登録</a> <!-- 新規登録へのリンクを追加 -->
+                    <a href="{% url 'accounts:signup' %}" class="nav-link active">新規登録</a>
                 {% endif %}
             </div>
         </div>

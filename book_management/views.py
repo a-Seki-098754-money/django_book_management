@@ -7,6 +7,8 @@ from django.db import IntegrityError
 from datetime import date, timedelta, datetime 
 from .models import Book, Member, Rental, Review
 from .forms import ReviewForm 
+# from django.core.mail import send_mail
+from . import mail
 
 def index(request):
     """トップページ"""
@@ -71,6 +73,29 @@ def borrow_book(request, pk):
                     book.save()
                     
                     messages.success(request, f'「{book.title}」を貸し出しました。返却期限は{rental.return_due_date}です。')
+                    
+                    # メール通知
+                    subject = f'図書貸し出し完了のお知らせ: {book.title}'
+                    body_html = (
+                        f'<p>{request.user.username}様</p>'
+                        f'<p>「<strong>{book.title}</strong>」の貸し出しが完了しました。</p>'
+                        f'<ul>'
+                        f'<li>貸出日: {rental.rental_date.strftime("%Y年%m月%d日 %H時%M分")}</li>'
+                        f'<li>返却期限: {rental.return_due_date.strftime("%Y年%m月%d日")}</li>'
+                        f'</ul>'
+                        f'<p>期限までに返却をお願いいたします。</p>'
+                        f'<p>図書管理システム</p>'
+                    )
+                    
+                    # ↓が本来のメールアドレスの設定
+                    # recipient_list = [request.user.email]
+                    #デモ用のメール送信（自分のめーるアドレスに送信）
+                    recipient_email = ['a.seki.sys24@morijyobi.ac.jp']
+                    
+                    if mail.send_mail(recipient_email,subject,body_html):
+                        messages.info(request,'貸出確認メールを送信しました。')
+                    else:
+                        messages.error(request,'メール送信に失敗しました。')
                 else:
                     messages.error(request, 'この図書は既に借りています。')
             else:

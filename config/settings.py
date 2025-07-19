@@ -116,3 +116,6 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 #ログイン後のリダイレクト先
 LOGIN_REDIRECT_URL = '/'
+
+#メール設定
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
