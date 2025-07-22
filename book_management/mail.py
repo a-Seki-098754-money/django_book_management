@@ -7,7 +7,7 @@ from email.mime.multipart import MIMEMultipart
 from email.header import Header # Headerクラスをインポート
 
 def send_mail(to, subject, body):
-    ID = 'あなたのGmailアドレス' # ここにあなたのGmailアドレスを設定してください
+    ID = 'a.seki.sys24@morijyobi.ac.jp' # ここにあなたのGmailアドレスを設定してください
     PASS = os.environ.get('MAIL_PASS') 
     
     if not PASS:
@@ -20,7 +20,7 @@ def send_mail(to, subject, body):
     msg = MIMEMultipart()
     
     # HTML形式のボディをUTF-8でエンコード
-    msg.attach(MIMEText(body, 'html', 'utf-8')) 
+    msg.attach(MIMEText(body, 'html')) 
     
     # 件名をUTF-8でエンコード
     msg['Subject'] = Header(subject, 'utf-8')
@@ -28,8 +28,8 @@ def send_mail(to, subject, body):
     # --- ここを修正 ---
     # Fromヘッダーの名前部分をUTF-8でエンコード
     from_name = "図書管理システム"
-    # formataddrの第一引数にHeaderオブジェクトをstr()で渡す
-    msg['From'] = formataddr((str(Header(from_name, 'utf-8')), ID)) 
+    # 日本語名を含むFromヘッダーを直接セット（UnicodeEncodeError対策）
+    msg['From'] = f'"{from_name}" <{ID}>'
     # --- 修正ここまで ---
     
     # 'to' がリストの場合、カンマ区切りの文字列に変換

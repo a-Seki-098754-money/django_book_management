@@ -47,14 +47,16 @@ class CustomUserCreationForm(UserCreationForm):
         
         if commit:
             user.save()
-            # Memberオブジェクトを作成
-            Member.objects.create(
-                user = user,
-                phone_number = self.cleaned_data['phone_number'],
-                postal_code = self.cleaned_data['postal_code'],
-                address = self.cleaned_data['address'],
-                membership_type = self.cleaned_data['membership_type'],
-                profile_image = self.cleaned_data['profile_image'],
-                is_active = True
+            # Memberオブジェクトを重複なく作成
+            Member.objects.get_or_create(
+                user=user,
+                defaults={
+                    'phone_number': self.cleaned_data['phone_number'],
+                    'postal_code': self.cleaned_data['postal_code'],
+                    'address': self.cleaned_data['address'],
+                    'membership_type': self.cleaned_data['membership_type'],
+                    'profile_image': self.cleaned_data['profile_image'],
+                    'is_active': True
+                }
             )
         return user

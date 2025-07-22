@@ -96,12 +96,16 @@ class BookAdmin(admin.ModelAdmin):
 @admin.register(Member)
 class MemberAdmin(admin.ModelAdmin):
     list_display = (
-        'user', 
-        'membership_type', 
-        'phone_number', 
-        'is_active', 
+        'user',
+        'email',  # メールアドレスを表示
+        'membership_type',
+        'phone_number',
+        'is_active',
         'created_at'
     )
+    def email(self, obj):
+        return obj.user.email
+    email.short_description = 'メールアドレス'
     
     list_filter = (
         'membership_type', 

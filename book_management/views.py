@@ -87,15 +87,11 @@ def borrow_book(request, pk):
                         f'<p>図書管理システム</p>'
                     )
                     
-                    # ↓が本来のメールアドレスの設定
-                    # recipient_list = [request.user.email]
-                    #デモ用のメール送信（自分のめーるアドレスに送信）
-                    recipient_email = ['a.seki.sys24@morijyobi.ac.jp']
-                    
-                    if mail.send_mail(recipient_email,subject,body_html):
-                        messages.info(request,'貸出確認メールを送信しました。')
+                    recipient_email = [request.user.email]
+                    if mail.send_mail(recipient_email, subject, body_html):
+                        messages.info(request, '貸出確認メールを送信しました。')
                     else:
-                        messages.error(request,'メール送信に失敗しました。')
+                        messages.error(request, 'メール送信に失敗しました。')
                 else:
                     messages.error(request, 'この図書は既に借りています。')
             else:

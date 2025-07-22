@@ -15,6 +15,7 @@
             {% bootstrap_form form %}
             {% bootstrap_button button_type="submit" content="ログイン" size="md" %}
         </form>
+        <div style="margin-top: 1.5rem;"></div>
         <p><a href="{% url 'accounts:signup' %}">{% bootstrap_button button_type="submit" content="新規登録" %}</a></p>
     </section>
 {% endif %}
