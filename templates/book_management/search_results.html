@@ -36,15 +36,15 @@
             <div class="col">
                 <div class="card h-100 shadow-sm">
                     {% if book.cover_image %}
-                        <img src="{{ book.cover_image.url }}" class="card" alt="{{ book.title }}の表紙" style="height: 250px; object-fit: cover;">
+                        <img src="{{ book.cover_image.url }}" class="card-img-top book-cover" alt="{{ book.title }}の表紙" style="height: 250px; width: 140px; object-fit: contain; margin: 0 auto; display: block; background: #fff;">
                     {% else %}
-                        <img src="/placeholder.svg?height=250&width=200" class="card-img-top" alt="表紙無し" style="height: 250px; object-fit: cover;">
+                        <img src="/placeholder.svg?height=250&width=140" class="card-img-top" alt="表紙無し" style="height: 250px; width: 140px; object-fit: contain; margin: 0 auto; display: block; background: #fff;">
                     {% endif %}
-                    <div class="card-body d-flex fle-column">
-                        <h5 class="card-title">{{ book.title }}</h5>
-                        <p class="card-text text-muted">著者：{{ book.author }}</p>
-                        <p class="card-text text-muted">カテゴリー：{{ book.category|default:"未分類" }}</p>
-                        <p class="card-text">在庫：{{ book.available_copies }}</p>
+                    <div class="card-body d-flex flex-column" style="background: #f8f9fa; color: #222; border-radius: 0 0 0.5rem 0.5rem; padding: 1rem;">
+                        <h5 class="card-title" style="font-weight: bold; color: #222;">{{ book.title }}</h5>
+                        <p class="card-text" style="color: #222;"><span style="color: #222;">著者：</span><span style="font-weight: 500; color: #222;">{{ book.author }}</span></p>
+                        <p class="card-text" style="color: #222;"><span style="color: #222;">カテゴリー：</span><span style="font-weight: 500; color: #222;">{{ book.category|default:'未分類' }}</span></p>
+                        <p class="card-text" style="color: #222;"><span style="color: #222;">在庫：</span><span style="font-weight: 500; color: #222;">{{ book.available_copies }}</span></p>
                         <div class="mt-auto">
                             <a href="{% url 'book_management:book_detail' book.pk %}" class="btn btn-info btn-sm">詳細をみる</a>
                         </div>

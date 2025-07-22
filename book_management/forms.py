@@ -1,6 +1,7 @@
 # book_management/forms.py
 from django import forms
 from .models import Review # Reviewモデルをインポート
+from .models import Book
 
 class ReviewForm(forms.ModelForm):
     class Meta:
@@ -15,4 +16,16 @@ class ReviewForm(forms.ModelForm):
             'rating': '評価',
             'title': 'タイトル',
             'content': 'レビュー内容',
+        }
+
+class BookForm(forms.ModelForm):
+    class Meta:
+        model = Book
+        fields = [
+            'title', 'author', 'publisher', 'publication_date', 'category',
+            'cover_image', 'total_copies', 'available_copies', 'description'
+        ]
+        widgets = {
+            'publication_date': forms.DateInput(attrs={'type': 'date'}),
+            'description': forms.Textarea(attrs={'rows': 3}),
         }

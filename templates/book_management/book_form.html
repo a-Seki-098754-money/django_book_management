@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% load django_bootstrap5 %}
+
+{% block content %}
+<h2>{% if form.instance.pk %}図書編集{% else %}図書追加{% endif %}</h2>
+<form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {% bootstrap_form form %}
+    <button type="submit" class="btn btn-primary">保存</button>
+    <a href="{% url 'book_management:index' %}" class="btn btn-secondary">キャンセル</a>
+</form>
+{% endblock %}

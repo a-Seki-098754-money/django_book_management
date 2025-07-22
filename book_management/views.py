@@ -6,9 +6,10 @@ from django.http import HttpResponse
 from django.db import IntegrityError
 from datetime import date, timedelta, datetime 
 from .models import Book, Member, Rental, Review
-from .forms import ReviewForm 
+from .forms import ReviewForm, BookForm
 # from django.core.mail import send_mail
 from . import mail
+from django.contrib.admin.views.decorators import staff_member_required
 
 def index(request):
     """トップページ"""
@@ -219,3 +220,40 @@ def search_books(request):
 def test_view(request):
     """テスト用ビュー"""
     return HttpResponse("テストページが正常に表示されました！")
+
+def add_book(request):
+    if not request.user.is_staff:
+        return HttpResponse('権限がありません', status=403)
+    if request.method == 'POST':
+        form = BookForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            messages.success(request, '図書を追加しました。')
+            return redirect('book_management:index')
+    else:
+        form = BookForm()
+    return render(request, 'book_management/book_form.html', {'form': form})
+
+def edit_book(request, pk):
+    if not request.user.is_staff:
+        return HttpResponse('権限がありません', status=403)
+    book = get_object_or_404(Book, pk=pk)
+    if request.method == 'POST':
+        form = BookForm(request.POST, request.FILES, instance=book)
+        if form.is_valid():
+            form.save()
+            messages.success(request, '図書情報を更新しました。')
+            return redirect('book_management:index')
+    else:
+        form = BookForm(instance=book)
+    return render(request, 'book_management/book_form.html', {'form': form})
+
+def delete_book(request, pk):
+    if not request.user.is_staff:
+        return HttpResponse('権限がありません', status=403)
+    book = get_object_or_404(Book, pk=pk)
+    if request.method == 'POST':
+        book.delete()
+        messages.success(request, '図書を削除しました。')
+        return redirect('book_management:index')
+    return render(request, 'book_management/book_confirm_delete.html', {'book': book})

@@ -10,6 +10,11 @@
     <a class="btn btn-primary btn-lg" href="/books/" role="button">図書一覧を見る</a>
 </div>
 
+{% if user.is_staff %}
+<div class="mb-3">
+    <a href="{% url 'book_management:add_book' %}" class="btn btn-success">図書追加</a>
+</div>
+{% endif %}
 {% if books %}
 <h3>新着図書</h3>
 <div class="row">
