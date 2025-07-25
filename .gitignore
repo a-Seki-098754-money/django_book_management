@@ -3,3 +3,10 @@
 __pycache__/
 db-volumes/
 db.sqlite3
+venv
+db.sqlite3
+.vscode
+pycache
+*.pyc
+.DS_Store
+.env
