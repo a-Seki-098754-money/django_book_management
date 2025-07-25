@@ -18,6 +18,8 @@ from dj_database_url import parse as dburl
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+# 環境変数にDATABASE_URLが設定されていない場合は、db.sqlite3 データベースを使用
+default_dburl = "sqlite:///" + str(BASE_DIR / "db.sqlite3")
 
 env = environ.Env()
 env.read_env(os.path.join(BASE_DIR, ".env"))
@@ -128,5 +130,3 @@ LOGIN_REDIRECT_URL = '/'
 #メール設定
 # EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
-# 環境変数にDATABASE_URLが設定されていない場合は、db.sqlite3 データベースを使用
-default_dburl = "sqlite:///" + str(BASE_DIR / "db.sqlite3")
