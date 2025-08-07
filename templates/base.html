@@ -8,46 +8,176 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         span {
-            color: white;
+            color: var(--text-color);
         }
+
         /* プロフィール画像のスタイル */
         .profile-icon {
-            width: 32px; /* アイコンの幅 */
-            height: 32px; /* アイコンの高さ */
-            border-radius: 50%; /* 丸くする */
-            object-fit: cover; /* 画像がはみ出さないように調整 */
-            margin-right: 8px; /* テキストとの間隔 */
-            border: 1px solid #ddd; /* 軽い枠線 */
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 8px;
+            border: 1px solid #ddd;
+            background-color: #000;
         }
+
         /* 図書表紙画像のスタイル */
         .book-cover {
-            width: 120px; /* 必要に応じて調整 */
-            height: 180px; /* 必要に応じて調整 */
-            object-fit: contain; /* 画像全体を表示 */
-            background: #fff;
-            border: 1px solid #ddd;
+            width: 120px;
+            height: 180px;
+            object-fit: contain;
+            background: #000;
+            border: 1px solid var(--border-color);
             border-radius: 4px;
             padding: 4px;
             box-sizing: border-box;
         }
-       
+
+        /* カスタムCSS変数の定義（ダーク + ゴールドテーマ） */
+        :root {
+            --primary-color: #d3381c;           /* 赤みのあるオレンジ */
+            --primary-color-dark: #b02e17;
+            --secondary-color: #ffd700;         /* ゴールド */
+            --secondary-color-dark: #e6b800;
+            --text-color: #ffd700;              /* メインテキストもゴールド */
+            --background-color: #1a1a1a;         /* 深めの黒背景 */
+            --white-color: #fff;
+            --border-color: #444;               /* グレー系の枠線 */
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            color: var(--text-color);
+            background-color: var(--background-color);
+        }
+
+        /* プライマリボタン（赤） */
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            color: var(--white-color);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--primary-color-dark);
+            border-color: var(--primary-color-dark);
+            color: var(--white-color);
+        }
+
+        /* セカンダリボタン（ゴールド） */
+        .btn-secondary {
+            background-color: var(--secondary-color-dark);
+            border-color: var(--secondary-color-dark);
+            color: var(--background-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: #ccaa00;
+            border-color: #ccaa00;
+            color: var(--background-color);
+        }
+
+        /* カードやフォームのスタイル */
+        .card {
+            background-color: #111;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .card-header {
+            background-color: var(--primary-color);
+            color: var(--white-color);
+        }
+
+        /* ナビゲーションバーの調整 */
+        .navbar {
+            background-color: var(--primary-color) !important;
+        }
+
+        .navbar-brand, .nav-link {
+            color: var(--secondary-color) !important;
+        }
+
+        .navbar-brand:hover, .nav-link:hover {
+            color: #ffcc00 !important;
+        }
+
+        .form-control {
+            background-color: #222;
+            color: var(--text-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .form-control:focus {
+            background-color: #222;
+            color: var(--text-color);
+            border-color: var(--secondary-color-dark);
+            box-shadow: none;
+        }
+
+        .alert {
+            background-color: #222;
+            color: var(--text-color);
+            border-color: var(--border-color);
+        }
+
+        /* その他のカスタムカラー用クラス */
+        .text-primary-custom {
+            color: var(--primary-color);
+        }
+
+        .bg-primary-custom {
+            background-color: var(--primary-color);
+        }
+
+        .text-secondary-custom {
+            color: var(--secondary-color);
+        }
+
+        .text-gold {
+            color: #d4af37 !important;
+        }
+
+        .table-gold {
+            background-color: #1a1a1a;
+            color: #d4af37 !important;
+        }
+
+        .table-gold th, .table-gold td {
+            border-color: #d4af37;
+            color: #d4af37 !important;
+        }
+
+        .bg-secondary-custom {
+            background-color: var(--secondary-color);
+        }
     </style>
+
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav class="navbar navbar-expand-lg navbar-dark">
         <div class="container">
             <a class="navbar-brand" href="{% url 'book_management:index' %}">図書管理システム</a>
-            
+                        
             <form class="d-flex" action="{% url 'book_management:search_books' %}" method="get">
                 <input class="form-control me-2" type="search" placeholder="タイトル、著者、出版社" aria-label="Search" name="q" value="{{ request.GET.q|default:'' }}">
                 <button class="btn btn-outline-light" type="submit">検索</button>
             </form>
-
+            
             <div class="navbar-nav ms-auto">
                 <a class="nav-link" href="{% url 'book_management:book_list' %}">図書一覧</a>
                 {% if user.is_authenticated %}
                     <a class="nav-link" href="{% url 'book_management:my_rentals' %}">マイ貸出</a>
                     
+                    <!-- 新しく追加: プロフィールリンク -->
+                    <a class="nav-link" href="{% url 'book_management:profile' %}">プロフィール</a>
+                    
+                    <!-- 管理者の場合はDjango Adminリンクを表示 -->
+                    {% if user.is_staff %}
+                        <a class="nav-link" href="{% url 'admin:index' %}">Django Admin</a>
+                    {% endif %}
+                                        
                     <!-- ここにアイコン表示ロジックを追加 -->
                     <span class="nav-link active d-flex align-items-center">
                         {% if user.member and user.member.profile_image %}
@@ -58,7 +188,7 @@
                         {% endif %}
                         {{ user.username }}でログインしています
                     </span>
-                    
+                                        
                     <a href="{% url 'logout' %}" class="nav-link active">ログアウト</a>
                 {% else %}
                     <a href="{% url 'login' %}" class="nav-link active">ログイン</a>
@@ -67,6 +197,7 @@
             </div>
         </div>
     </nav>
+    
     <div class="container mt-4">
         {% if messages %}
             {% for message in messages %}
@@ -79,6 +210,7 @@
         {% block content %}
         {% endblock %}
     </div>
+    
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>

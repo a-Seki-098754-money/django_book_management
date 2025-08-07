@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load django_bootstrap5 %}
+
+{% block title %}プロフィール{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="text-center md-0">プロフィール</h3>
+                </div>
+                <div class="card-body">
+                    <div class="row mb-3">
+                        <div class="col-sm-3"><strong>ユーザー名：</strong></div>
+                        <div class="col-sm-9">{{ user.username }}</div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-3"><strong>名前：</strong></div>
+                        <div class="col-sm-9">
+                            {% if user.first_name or user.last_name %}
+                                {{ user.first_name }} {{ user.last_name }}
+                            {% else %}
+                                未設定
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-3"><strong>メールアドレス：</strong></div>
+                        <div class="col-sm-9"{{ user.email|default:"未設定" }}></div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-3"><strong>電話番号：</strong></div>
+                        <div class="col-sm-9"{{ user.phone_number|default:"未設定" }}></div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-3"><strong>住所：</strong></div>
+                        <div class="col-sm-9"{{ user.address|default:"未設定" }}></div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-sm-3"><strong>登録日：</strong></div>
+                        <div class="col-sm-9">{{ user.date_joined|date:"Y年m月d日" }}</div>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-4">
+                        <a href="{% url 'book_management:profile_edit' %}" class="btn btn-primary">プロフィールを編集</a>
+                        <a href="{% url 'book_management:index' %}" class="btn btn-secondary">ホームに戻る</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

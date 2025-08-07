@@ -6,8 +6,7 @@ from django.http import HttpResponse
 from django.db import IntegrityError
 from datetime import date, timedelta, datetime 
 from .models import Book, Member, Rental, Review
-from .forms import ReviewForm, BookForm
-# from django.core.mail import send_mail
+from .forms import ReviewForm, BookForm, ProfileEditForm, MemberEditForm
 from . import mail
 from django.contrib.admin.views.decorators import staff_member_required
 
@@ -100,7 +99,7 @@ def borrow_book(request, pk):
                 
         except Member.DoesNotExist:
             messages.error(request, '会員登録が必要です。')
-        return redirect('book_management:book_detail', pk=pk) # ここを修正
+    return redirect('book_management:book_detail', pk=pk) # ここを修正
 
 @login_required
 def return_book(request, pk): 
@@ -125,12 +124,12 @@ def return_book(request, pk):
             book.save()
             
             messages.success(request, f'「{book.title}」を返却しました。')
-                    
+                
         except Member.DoesNotExist:
             messages.error(request, '会員登録が必要です。')
         except Rental.DoesNotExist:
             messages.error(request, 'この図書の貸出記録が見つかりません。')
-        return redirect('book_management:book_detail', pk=pk) # ここを修正
+    return redirect('book_management:book_detail', pk=pk) # ここを修正
 
 @login_required
 def my_rentals(request):
@@ -143,7 +142,7 @@ def my_rentals(request):
             'rentals': rentals,
         }
         return render(request, 'book_management/my_rentals.html', context)
-                
+            
     except Member.DoesNotExist:
         messages.error(request, '会員登録が必要です。')
         return redirect('book_management:index') # ここを修正
@@ -160,7 +159,6 @@ def add_review(request, pk):
         return redirect('book_management:book_detail', pk=book.pk) # ここを修正
 
     existing_review = Review.objects.filter(book=book, member=member).first() 
-
     if existing_review:
         form = ReviewForm(request.POST or None, instance=existing_review)
         message = "この本のレビューは既に投稿されています。編集してください。"
@@ -257,3 +255,46 @@ def delete_book(request, pk):
         messages.success(request, '図書を削除しました。')
         return redirect('book_management:index')
     return render(request, 'book_management/book_confirm_delete.html', {'book': book})
+
+@login_required
+def profile_view(request):
+    """プロフィールページ"""
+    try:
+        member = request.user.member
+    except Member.DoesNotExist:
+        member = None
+        
+    context = {
+        'user': request.user,
+        'member': member,
+    }
+    return render(request, 'book_management/profile.html', context)
+
+@login_required
+def profile_edit(request):
+    """プロフィール編集"""
+    try:
+        member = request.user.member
+    except Member.DoesNotExist:
+        # 会員登録がない場合は新規作成
+        member = Member.objects.create(user=request.user)
+        
+    if request.method == 'POST':
+        user_form = ProfileEditForm(request.POST, instance=request.user)  # request.userを渡す
+        member_form = MemberEditForm(request.POST, instance=member)       # memberを渡す
+        
+        if user_form.is_valid() and member_form.is_valid():
+            user_form.save()
+            member_form.save()
+            messages.success(request, 'プロフィールが更新されました。')
+            return redirect('book_management:profile')
+    else:
+        # 正しいインスタンスを返す
+        user_form = ProfileEditForm(instance=request.user)  # request.userを渡す
+        member_form = MemberEditForm(instance=member)       # memberを渡す
+            
+    context = {
+        'user_form': user_form,
+        'member_form': member_form,
+    }
+    return render(request, 'book_management/profile_edit.html', context)

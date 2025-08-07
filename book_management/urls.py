@@ -17,4 +17,8 @@ urlpatterns = [
     path('books/add/', views.add_book, name='add_book'),
     path('books/<int:pk>/edit/', views.edit_book, name='edit_book'),
     path('books/<int:pk>/delete/', views.delete_book, name='delete_book'),
+    
+    #追加
+    path('profile/', views.profile_view, name = 'profile'),
+    path('profile/edit/', views.profile_edit, name='profile_edit'),
 ]
