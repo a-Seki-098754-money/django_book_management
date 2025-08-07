@@ -1,4 +1,6 @@
-{% extends "base.html" %}
+<!-- templates/book_management/profile.html -->
+
+{% extends 'base.html' %}
 {% load django_bootstrap5 %}
 
 {% block title %}プロフィール{% endblock %}
@@ -9,37 +11,46 @@
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">
-                    <h3 class="text-center md-0">プロフィール</h3>
+                    <h3 class="text-center mb-0">プロフィール</h3>
                 </div>
                 <div class="card-body">
                     <div class="row mb-3">
-                        <div class="col-sm-3"><strong>ユーザー名：</strong></div>
+                        <div class="col-sm-3"><strong>ユーザー名:</strong></div>
                         <div class="col-sm-9">{{ user.username }}</div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-sm-3"><strong>名前：</strong></div>
+                        <div class="col-sm-3"><strong>名前:</strong></div>
                         <div class="col-sm-9">
                             {% if user.first_name or user.last_name %}
-                                {{ user.first_name }} {{ user.last_name }}
+                                {{ user.last_name }} {{ user.first_name }}
                             {% else %}
                                 未設定
                             {% endif %}
                         </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-sm-3"><strong>メールアドレス：</strong></div>
-                        <div class="col-sm-9"{{ user.email|default:"未設定" }}></div>
+                        <div class="col-sm-3"><strong>メールアドレス:</strong></div>
+                        <div class="col-sm-9">{{ user.email|default:"未設定" }}</div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-sm-3"><strong>電話番号：</strong></div>
-                        <div class="col-sm-9"{{ user.phone_number|default:"未設定" }}></div>
+                        <div class="col-sm-3"><strong>電話番号:</strong></div>
+                        <div class="col-sm-9">{{ member.phone_number|default:"未設定" }}</div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-sm-3"><strong>住所：</strong></div>
-                        <div class="col-sm-9"{{ user.address|default:"未設定" }}></div>
+                        <div class="col-sm-3"><strong>住所:</strong></div>
+                        <div class="col-sm-9">{{ member.address|default:"未設定" }}</div>
+                    </div>
+                    <!-- 新しく追加: 会員ランク -->
+                    <div class="row mb-3">
+                        <div class="col-sm-3"><strong>会員ランク:</strong></div>
+                        <div class="col-sm-9">
+                            <span class="badge {% if membership_level == 'プレミアム会員' %}bg-success{% else %}bg-info{% endif %}">
+                                {{ membership_level }}
+                            </span>
+                        </div>
                     </div>
                     <div class="row mb-3">
-                        <div class="col-sm-3"><strong>登録日：</strong></div>
+                        <div class="col-sm-3"><strong>登録日:</strong></div>
                         <div class="col-sm-9">{{ user.date_joined|date:"Y年m月d日" }}</div>
                     </div>
                     
@@ -52,5 +63,4 @@
         </div>
     </div>
 </div>
-
 {% endblock %}

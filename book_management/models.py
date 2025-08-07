@@ -56,6 +56,13 @@ class Member(models.Model):
         ('staff', 'スタッフ'),
         ('premium', 'プレミアム会員'), 
     ]
+    membership_level = models.CharField(
+        max_length=10,
+        choices=MEMBERSHIP_TYPE_CHOICES,
+        default='regular',
+        verbose_name='会員ランク',
+        
+    )
     
     member_id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)

@@ -267,6 +267,7 @@ def profile_view(request):
     context = {
         'user': request.user,
         'member': member,
+        'membership_level':member.get_membership_level_display() if member else '未設定',
     }
     return render(request, 'book_management/profile.html', context)
 
