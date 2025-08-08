@@ -192,6 +192,9 @@
                     
                     <!-- 新しく追加: プロフィールリンク -->
                     <a class="nav-link" href="{% url 'book_management:profile' %}">プロフィール</a>
+
+                    {% comment %} パスワード変更リンク {% endcomment %}
+                    <a class="nav-link" href="{% url 'accounts:password_change' %}">パスワード変更</a>
                     
                     <!-- 管理者の場合はDjango Adminリンクを表示 -->
                     {% if user.is_staff %}

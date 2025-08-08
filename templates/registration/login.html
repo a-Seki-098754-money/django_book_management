@@ -17,6 +17,7 @@
         </form>
         <div style="margin-top: 1.5rem;"></div>
         <p><a href="{% url 'accounts:signup' %}">{% bootstrap_button button_type="submit" content="新規登録" %}</a></p>
+        <p><a href="{% url 'accounts:password_reset' %}">{% bootstrap_button button_type="button" content="パスワードを忘れた方はこちら" %}</a></p>
     </section>
 {% endif %}
 {% endblock %}
