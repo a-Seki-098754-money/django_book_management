@@ -47,7 +47,7 @@
                         </td>
                         <td>
                             {% if not rental.return_date %}
-                                <a href="{% url 'book_management:return_book' rental.pk %}" class="btn btn-success btn-sm">返却する</a>
+                                <a href="{% url 'book_management:return_book' rental.book.pk %}" class="btn btn-success btn-sm">返却する</a>
                             {% else %}
                                 -
                             {% endif %}
