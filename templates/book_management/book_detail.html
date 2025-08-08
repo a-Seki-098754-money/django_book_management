@@ -54,11 +54,11 @@
                     <button type="submit" class="btn btn-warning">返却する</button>
                 </form>
                 {% if not user_review %}
-                    <a href="{% url 'book_management:add_review' book.book_id %}" class="btn btn-info">レビューを書く</a>
+                    <a href="{% url 'book_management:add_review' book.book_id %}" class="btn btn-review">レビューを書く</a>
                 {% endif %}
                 {% if user.is_staff %}
                     <a href="{% url 'book_management:edit_book' book.book_id %}" class="btn btn-warning btn-sm ms-2">編集</a>
-                    <a href="{% url 'book_management:delete_book' book.book_id %}" class="btn btn-danger btn-sm ms-1">削除</a>
+                    <a href="{% url 'book_management:delete_book' book.book_id %}" class="btn btn-review btn-sm ms-1">削除</a>
                 {% endif %}
             </div>
         {% endif %}

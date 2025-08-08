@@ -1,61 +1,53 @@
-{% extends "base.html" %}
+<!-- templates/book_management/my_rentals.html -->
+{% extends 'base.html' %}
 {% load django_bootstrap5 %}
 
-{% block title %}貸し出し履歴{% endblock %}
+{% block title %}マイ貸し出し{% endblock %}
 
 {% block content %}
 <div class="container mt-5">
-    <h2 class="md-4 text-gold">貸し出し履歴</h2>
+    <h2 class="mb-4 text-gold">マイ貸し出し履歴</h2>
 
     {% if rentals %}
         <div class="table-responsive">
             <table class="table table-striped table-hover table-gold">
                 <thead>
                     <tr>
-                        <th>タイトル</th>
-                        <th>貸し出し日</th>
+                        <th>番号</th> {# 新しく追加 #}
+                        <th>図書タイトル</th>
+                        <th>貸出日</th>
                         <th>返却予定日</th>
                         <th>返却日</th>
                         <th>ステータス</th>
-                        <th>延滞料金</th>
                         <th>操作</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for rental in rentals %}
                     <tr>
+                        <td>{{ forloop.counter }}</td> {# 新しく追加 #}
+                        <td><a href="{% url 'book_management:book_detail' rental.book.pk %}">{{ rental.book.title }}</a></td>
+                        <td>{{ rental.rental_date|date:"Y年m月d日" }}</td>
+                        <td>{{ rental.due_date|date:"Y年m月d日" }}</td>
                         <td>
-                            <a href="{% url 'book_management:book_detail' rental.book.pk %}">
-                                {{ rental.book.title }}
-                            </a>
-                        </td>
-                        <td>{{ rental.rental_date|date:"Y/m/d H:i" }}</td>
-                        <td>{{ rental.return_due_date|date:"Y/m/d" }}</td>
-                        <td>
-                            {% if rental.rental_date %}
-                                {{ rental.return_date|date:"Y/m/d H:i" }}
+                            {% if rental.return_date %}
+                                {{ rental.return_date|date:"Y年m月d日" }}
                             {% else %}
-                                -
+                                貸出中
                             {% endif %}
                         </td>
                         <td>
-                            {% if rental.status == 'borrowed' %}
-                                <span class="badge bg-warning">貸出中</span>
-                            {% elif rental.status == 'returned' %}
-                                <span class="badge bg-success">返却済み</span>
-                            {% elif rental.status == 'overdue' %}
-                                <span class="badge bg-danger">延滞</span>
+                            {% if rental.return_date %}
+                                <span class="badge bg-secondary">返却済み</span>
+                            {% elif rental.due_date < today %}
+                                <span class="badge bg-danger">延滞中</span>
                             {% else %}
-                                {{ rental.get_status_display }}
+                                <span class="badge bg-primary">貸出中</span>
                             {% endif %}
                         </td>
-                        <td>{{ rental.fine_amount }}円</td>
                         <td>
-                            {% if rental.status == 'borrowed' %}
-                                <form action="{% url 'book_management:return_book' rental.book.pk %}" method="post" class="d-inline">
-                                    {% csrf_token %}
-                                    <button type="submit" class="btn btn-success btn-sm">返却する</button>
-                                </form>
+                            {% if not rental.return_date %}
+                                <a href="{% url 'book_management:return_book' rental.pk %}" class="btn btn-success btn-sm">返却する</a>
                             {% else %}
                                 -
                             {% endif %}
@@ -67,9 +59,8 @@
         </div>
     {% else %}
         <div class="alert alert-info" role="alert">
-            現在、貸出中の図書はありません。
+            現在、貸し出し中の図書はありません。
         </div>
-        <a href="{% url 'book_management:book_list' %}" class="btn btn-primary">図書一覧をみる</a>
     {% endif %}
 </div>
 {% endblock %}
